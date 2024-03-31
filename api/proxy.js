@@ -1,18 +1,23 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-module.exports = async (req, res) => {
-  const targetUrl = 'https://kattis-badge-go-empty-brook-9555.fly.dev';
+export default async (req, res) => {
+  
 
- // Setting CORS headers
- res.setHeader('Access-Control-Allow-Origin', '*');
- res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
- res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+ const baseUrl = 'https://kattis-badge-go-empty-brook-9555.fly.dev';
 
- // OPTIONS method for preflight requests in CORS
- if (req.method === 'OPTIONS') {
-   return res.status(200).end();
- }
+ const additionalPath = req.url.replace(/^\/api\/proxy/, '');
 
+ const targetUrl = `${baseUrl}${additionalPath}`;
+
+  console.log(targetUrl)
+
+res.setHeader('Access-Control-Allow-Origin', '*');
+res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+if (req.method === 'OPTIONS') {
+  return res.status(200).end();
+}
  try {
    const response = await fetch(targetUrl, {
      method: req.method,
